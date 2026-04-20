@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: custom-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: custom.rules
+      rules:
+        - alert: PodCrashLoop
+          expr: kube_pod_container_status_restarts_total > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod restarting"
+            description: "A pod has restarted."
